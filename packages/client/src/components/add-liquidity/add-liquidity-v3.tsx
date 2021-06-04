@@ -54,6 +54,10 @@ import Sentry, { init, SentryError } from 'util/sentry';
 import { trackSentimentInteraction, trackAddLiquidityTx } from 'util/mixpanel';
 import classNames from 'classnames';
 
+import pngApyHappy from 'styles/images/apy-happy.png';
+import pngApyNormal from 'styles/images/apy-normal.png';
+import pngApySad from 'styles/images/apy-sad.png';
+
 type Props = {
     balances: WalletBalances;
     pool: PoolOverview | null;
@@ -1481,25 +1485,6 @@ export const AddLiquidityV3 = ({
                     flexDirection='column'
                     className='token-control-container'
                 >
-                    {/* <Box width='48%'>
-                        {selectedSymbol0 && (
-                            <TokenWithBalance
-                                id={tokenInputState[selectedSymbol0].id}
-                                name={selectedSymbol0}
-                                balance={balances?.[selectedSymbol0]?.balance}
-                                decimals={balances?.[selectedSymbol0]?.decimals}
-                            />
-                        )}
-                        <br />
-                        {selectedSymbol1 && (
-                            <TokenWithBalance
-                                id={tokenInputState[selectedSymbol1].id}
-                                name={selectedSymbol1}
-                                balance={balances?.[selectedSymbol1]?.balance}
-                                decimals={balances?.[selectedSymbol1]?.decimals}
-                            />
-                        )}
-                    </Box> */}
                     {isWETHPair && (
                         <Box
                             display='flex'
@@ -1527,20 +1512,6 @@ export const AddLiquidityV3 = ({
                                     });
                                 }}
                             >
-                                <button
-                                    className={classNames('btn-default', {
-                                        active: isTokenETHActive,
-                                    })}
-                                    disabled={isTokenETHDisabled}
-                                >
-                                    <FontAwesomeIcon
-                                        icon={
-                                            isTokenETHDisabled
-                                                ? faBan
-                                                : faCheckCircle
-                                        }
-                                    />
-                                </button>
                                 <div
                                     style={{
                                         flexGrow: 1,
@@ -1788,11 +1759,12 @@ export const AddLiquidityV3 = ({
                 >
                     <div
                         className={classNames({
-                            'sentiment-button': true,
+                            'sentiment-item': true,
                             active: isFlipped
                                 ? sentiment === 'bullish'
                                 : sentiment === 'bearish',
                         })}
+                        role='button'
                         onClick={() => {
                             setSentiment(isFlipped ? 'bullish' : 'bearish');
                             trackSentimentInteraction(pool, 'bearish');
@@ -1803,9 +1775,10 @@ export const AddLiquidityV3 = ({
                     </div>
                     <div
                         className={classNames({
-                            'sentiment-button': true,
+                            'sentiment-item': true,
                             active: sentiment === 'neutral',
                         })}
+                        role='button'
                         onClick={() => {
                             setSentiment('neutral');
                             trackSentimentInteraction(pool, 'neutral');
@@ -1815,11 +1788,12 @@ export const AddLiquidityV3 = ({
                     </div>
                     <div
                         className={classNames({
-                            'sentiment-button': true,
+                            'sentiment-item': true,
                             active: isFlipped
                                 ? sentiment === 'bearish'
                                 : sentiment === 'bullish',
                         })}
+                        role='button'
                         onClick={() => {
                             setSentiment(isFlipped ? 'bearish' : 'bullish');
                             trackSentimentInteraction(pool, 'bullish');
@@ -1878,7 +1852,7 @@ export const AddLiquidityV3 = ({
                         </Box>
                     )} */}
                 </div>
-                <br />
+                {/* <br />
                 <div>
                     <LiquidityActionButton
                         disabledInput={disabledInput}
@@ -1889,7 +1863,7 @@ export const AddLiquidityV3 = ({
                         pendingBounds={pendingBounds}
                         currentGasPrice={currentGasPrice}
                     />
-                </div>
+                </div> */}
             </div>
         </>
     );

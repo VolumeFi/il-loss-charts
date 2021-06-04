@@ -12,7 +12,7 @@ import { AddLiquidityV3 } from 'components/add-liquidity/add-liquidity-v3';
 import { Helmet } from 'react-helmet';
 import { useLocation, useParams } from 'react-router-dom';
 import { useBalance } from 'hooks/use-balance';
-import { usePoolOverview } from 'hooks/data-fetchers';
+import { usePoolOverview, useTopPools } from 'hooks/data-fetchers';
 import { useWallet } from 'hooks/use-wallet';
 import { debug } from 'util/debug';
 import { PoolOverview } from 'hooks/data-fetchers';

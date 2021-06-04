@@ -814,27 +814,30 @@ p {
 .connect-wallet-button {
     color: var(--faceDeep);
     width: 100%;
-    max-width: 150px;
+    max-width: 200px;
     max-height: 38px;
     font-size: 1rem;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
     font-weight: 600;
-    background: var(--objAccent);
-    border: 1px solid var(--borderAccent);
-    border-radius: 0;
+    background: transparent;
+    border: none;
+    outline: none;
+    // border: 1px solid var(--borderAccent);
     padding: 0.5rem 1.25rem;
-    border-radius: 4px;
-    width: 'fit-content';
-    &:hover,
-    :active,
-    :focus,
-    :visited {
-        background-color: var(--objAccent);
-        border: 1px solid var(--borderAccent);
-        outline: none;
-        box-shadow: none;
+    width: 200px;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+
+    img {
+        height: 40px;
+        margin-right: 10px;
+    }
+
+    span {
+        padding-top: 3px;
     }
 }
 
@@ -1061,10 +1064,10 @@ th .caret-4-desc:after {
 .wallet-combo {
     display: flex;
     align-items: flex-start;
-    justify-content: flex-end;
+    justify-content: center;
     position: relative;
     margin-left: 1rem;
-    width: 282px;
+    width: 100%;
 }
 // SCROLL UI
 .scroll {
