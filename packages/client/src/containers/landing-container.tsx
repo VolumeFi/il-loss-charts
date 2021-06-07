@@ -53,10 +53,8 @@ function LandingContainer({
                     target='_blank'
                     rel='noreferrer'
                 >
-                    <FontAwesomeIcon icon={faDiscord} />
-                    &nbsp;
-                    <p>Support</p>
-                </a>
+                    <img src='../styles/images/cart.png' />
+                </div>
             </Box>
         </div>
     );
