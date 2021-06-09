@@ -63,6 +63,7 @@ type Props = {
     pool: PoolOverview | null;
     shortUrl: string | null;
     gasPrices: EthGasPrices | null;
+    onSkipPairs: () => void;
 };
 
 export type Sentiment = 'bullish' | 'bearish' | 'neutral';
@@ -74,6 +75,7 @@ export const AddLiquidityV3 = ({
     balances,
     shortUrl,
     gasPrices,
+    onSkipPairs,
 }: Props): JSX.Element | null => {
     const [priceImpact, setPriceImpact] = useState('0');
     const [pendingApproval, setPendingApproval] = useState(false);
