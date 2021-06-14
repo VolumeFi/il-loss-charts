@@ -65,6 +65,7 @@ type Props = {
     pool: PoolOverview | null;
     shortUrl: string | null;
     gasPrices: EthGasPrices | null;
+    level: number;
     leftArrow: boolean | false;
     rightArrow: boolean | false;
     onSkipPairs: () => void;
@@ -81,6 +82,7 @@ export const AddLiquidityV3 = ({
     balances,
     shortUrl,
     gasPrices,
+    level,
     leftArrow,
     rightArrow,
     onSkipPairs,
@@ -1778,8 +1780,10 @@ export const AddLiquidityV3 = ({
                         })}
                         role='button'
                         onClick={() => {
-                            setSentiment(isFlipped ? 'bullish' : 'bearish');
-                            trackSentimentInteraction(pool, 'bearish');
+                            if (level > 1) {
+                                setSentiment(isFlipped ? 'bullish' : 'bearish');
+                                trackSentimentInteraction(pool, 'bearish');
+                            }
                         }}
                     >
                         <FontAwesomeIcon icon={faAngleDoubleDown} /> Bearish{' '}
@@ -1807,8 +1811,10 @@ export const AddLiquidityV3 = ({
                         })}
                         role='button'
                         onClick={() => {
-                            setSentiment(isFlipped ? 'bearish' : 'bullish');
-                            trackSentimentInteraction(pool, 'bullish');
+                            if (level > 1) {
+                                setSentiment(isFlipped ? 'bearish' : 'bullish');
+                                trackSentimentInteraction(pool, 'bullish');
+                            }
                         }}
                     >
                         <FontAwesomeIcon icon={faAngleDoubleUp} /> Bullish{' '}
