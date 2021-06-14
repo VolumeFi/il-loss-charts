@@ -57,13 +57,19 @@ import classNames from 'classnames';
 import pngApyHappy from 'styles/images/apy-happy.png';
 import pngApyNormal from 'styles/images/apy-normal.png';
 import pngApySad from 'styles/images/apy-sad.png';
+import pngArrowLeft from 'styles/images/left.png';
+import pngArrowRight from 'styles/images/right.png';
 
 type Props = {
     balances: WalletBalances;
     pool: PoolOverview | null;
     shortUrl: string | null;
     gasPrices: EthGasPrices | null;
+    leftArrow: boolean | false;
+    rightArrow: boolean | false;
     onSkipPairs: () => void;
+    onLeft: () => void;
+    onRight: () => void;
 };
 
 export type Sentiment = 'bullish' | 'bearish' | 'neutral';
@@ -75,7 +81,11 @@ export const AddLiquidityV3 = ({
     balances,
     shortUrl,
     gasPrices,
+    leftArrow,
+    rightArrow,
     onSkipPairs,
+    onLeft,
+    onRight,
 }: Props): JSX.Element | null => {
     const [priceImpact, setPriceImpact] = useState('0');
     const [pendingApproval, setPendingApproval] = useState(false);
