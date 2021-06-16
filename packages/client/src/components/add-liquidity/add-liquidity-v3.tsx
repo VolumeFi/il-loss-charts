@@ -54,6 +54,7 @@ import Sentry, { init, SentryError } from 'util/sentry';
 import { trackSentimentInteraction, trackAddLiquidityTx } from 'util/mixpanel';
 import classNames from 'classnames';
 
+import pngDancingBanana from 'styles/images/dancing-banana.png';
 import pngApyHappy from 'styles/images/apy-happy.png';
 import pngApyNormal from 'styles/images/apy-normal.png';
 import pngApySad from 'styles/images/apy-sad.png';
