@@ -1688,7 +1688,7 @@ export const AddLiquidityV3 = ({
                                 if (
                                     !isToken1Active &&
                                     selectedSymbolCount === 2
-                                )
+                                add-liquidity-v3.tsx
                                     return;
                                 if (
                                     isToken1Disabled ||
