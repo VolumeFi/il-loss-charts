@@ -50,12 +50,7 @@ import { LiquidityRange } from 'components/add-liquidity/liquidity-range';
 import { EthGasPrices, LiquidityBand } from '@sommelier/shared-types';
 import { PoolOverview } from 'hooks/data-fetchers';
 import { debug } from 'util/debug';
-<<<<<<< HEAD
 import Sentry, { init, SentryError } from 'util/sentry';
-=======
-import Sentry, { SentryError } from 'util/sentry';
-import { formatUSD } from 'util/formats';
->>>>>>> aac9aea (fix ui, add liqudity)
 import { trackSentimentInteraction, trackAddLiquidityTx } from 'util/mixpanel';
 import classNames from 'classnames';
 
