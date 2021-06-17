@@ -59,12 +59,12 @@ export const useRandomPool = (): UseRandomPool => {
         wallet: { network },
     } = useWallet();
 
-    // const networkName = network ? config.networks[network].name : 'mainnet';
-    const networkName = 'rinkeby';
+    const networkName = network ? config.networks[network].name : 'mainnet';
+    // const networkName = 'rinkeby';
 
     const getRandomPool = async () => {
         const response = await fetch(
-            `/api/v1/${networkName}/randomPool?count=${30}`,
+            `/api/v1/${networkName}/randomPool?count=${1000}`,
         );
         if (!response.ok) throw new Error(`Failed to fetch top pools`);
 

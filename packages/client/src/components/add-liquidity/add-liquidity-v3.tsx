@@ -50,7 +50,12 @@ import { LiquidityRange } from 'components/add-liquidity/liquidity-range';
 import { EthGasPrices, LiquidityBand } from '@sommelier/shared-types';
 import { PoolOverview } from 'hooks/data-fetchers';
 import { debug } from 'util/debug';
+<<<<<<< HEAD
 import Sentry, { init, SentryError } from 'util/sentry';
+=======
+import Sentry, { SentryError } from 'util/sentry';
+import { formatUSD } from 'util/formats';
+>>>>>>> aac9aea (fix ui, add liqudity)
 import { trackSentimentInteraction, trackAddLiquidityTx } from 'util/mixpanel';
 import classNames from 'classnames';
 
@@ -60,6 +65,7 @@ import pngApyNormal from 'styles/images/apy-normal.png';
 import pngApySad from 'styles/images/apy-sad.png';
 import pngArrowLeft from 'styles/images/left.png';
 import pngArrowRight from 'styles/images/right.png';
+import pngMoney from 'styles/images/money.png';
 
 type Props = {
     balances: WalletBalances;
