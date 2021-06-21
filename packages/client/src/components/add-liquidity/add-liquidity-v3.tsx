@@ -61,6 +61,11 @@ import pngApySad from 'styles/images/apy-sad.png';
 import pngArrowLeft from 'styles/images/left.png';
 import pngArrowRight from 'styles/images/right.png';
 import pngMoney from 'styles/images/money.png';
+import pngETH from 'styles/images/eth.png';
+import pngNANA from 'styles/images/tokens/nana.png';
+import pngLeft from 'styles/images/left-arrow.png';
+import pngRight from 'styles/images/right-arrow.png';
+import pngBanana2 from 'styles/images/banana-2.png';
 
 type Props = {
     balances: WalletBalances;
@@ -68,9 +73,11 @@ type Props = {
     shortUrl: string | null;
     gasPrices: EthGasPrices | null;
     level: number;
+    isNANA: boolean | false;
     leftArrow: boolean | false;
     rightArrow: boolean | false;
     onSkipPairs: () => void;
+    onAddBasket: () => void;
     onLeft: () => void;
     onRight: () => void;
 };
@@ -85,9 +92,11 @@ export const AddLiquidityV3 = ({
     shortUrl,
     gasPrices,
     level,
+    isNANA,
     leftArrow,
     rightArrow,
     onSkipPairs,
+    onAddBasket,
     onLeft,
     onRight,
 }: Props): JSX.Element | null => {
@@ -1575,15 +1584,6 @@ export const AddLiquidityV3 = ({
                                 twoSide={true}
                             />
                         </Box>
-                    )}
-                    <Box
-                        display='flex'
-                        justifyContent='space-between'
-                        className={classNames('token-input-control', {
-                            active: isToken0Active,
-                            inactive: !isToken0Active,
-                        })}
-                    >
                         <Box
                             display='flex'
                             justifyContent='flex-start'
@@ -1630,9 +1630,6 @@ export const AddLiquidityV3 = ({
                                     display: 'flex',
                                     alignItems: 'center',
                                 }}
-                                className={classNames('token-balance-wrapper', {
-                                    active: isToken0Active,
-                                })}
                             >
                                 <TokenWithBalance
                                     id={tokenInputState[token0Symbol]?.id}
@@ -1646,38 +1643,118 @@ export const AddLiquidityV3 = ({
                             </div>
                         </Box>
 
-                        <TokenInput
-                            token={token0Symbol}
-                            amount={
-                                isToken0Active
-                                    ? tokenInputState[token0Symbol].amount
-                                    : ''
-                            }
-                            updateAmount={(amt: string) => {
-                                dispatch({
-                                    type: 'update-amount',
-                                    payload: {
-                                        sym: token0Symbol,
-                                        amount: amt,
-                                    },
-                                });
-                            }}
-                            handleTokenRatio={handleTokenRatio}
-                            balances={balances}
-                            disabled={
-                                disabledInput?.includes(token0Symbol) ||
-                                !isToken0Active
-                            }
-                            twoSide={true}
-                        />
+                            <TokenInput
+                                token={token0Symbol}
+                                amount={
+                                    isToken0Active
+                                        ? tokenInputState[token0Symbol].amount
+                                        : ''
+                                }
+                                updateAmount={(amt: string) => {
+                                    dispatch({
+                                        type: 'update-amount',
+                                        payload: {
+                                            sym: token0Symbol,
+                                            amount: amt,
+                                        },
+                                    });
+                                }}
+                                handleTokenRatio={handleTokenRatio}
+                                balances={balances}
+                                disabled={
+                                    disabledInput?.includes(token0Symbol) ||
+                                    !isToken0Active
+                                }
+                                twoSide={true}
+                            />
+                        </Box>
+                        <Box
+                            display='flex'
+                            justifyContent='space-between'
+                            className={classNames('token-input-control', {
+                                active: isToken1Active,
+                                inactive: !isToken1Active,
+                            })}
+                        >
+                            <Box
+                                display='flex'
+                                justifyContent='flex-start'
+                                flexGrow='1'
+                                onClick={() => {
+                                    if (
+                                        !isToken1Active &&
+                                        selectedSymbolCount === 2
+                                    )
+                                        return;
+                                    if (
+                                        isToken1Disabled ||
+                                        (token1Symbol === 'WETH' && disableWETH)
+                                    )
+                                        return;
+                                    dispatch({
+                                        type: 'toggle',
+                                        payload: { sym: token1Symbol },
+                                    });
+                                }}
+                            >
+                                <div
+                                    style={{
+                                        flexGrow: 1,
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                    }}
+                                    className={classNames(
+                                        'token-balance-wrapper',
+                                        {
+                                            active: isToken1Active,
+                                        },
+                                    )}
+                                >
+                                    <TokenWithBalance
+                                        id={tokenInputState[token1Symbol].id}
+                                        name={token1Symbol}
+                                        balance={
+                                            balances?.[token1Symbol]?.balance
+                                        }
+                                        decimals={
+                                            balances?.[token1Symbol]?.decimals
+                                        }
+                                        disabled={isToken1Disabled}
+                                    />
+                                </div>
+                            </Box>
+                            <TokenInput
+                                token={token1Symbol}
+                                amount={
+                                    isToken1Active
+                                        ? tokenInputState[token1Symbol].amount
+                                        : ''
+                                }
+                                updateAmount={(amt: string) => {
+                                    dispatch({
+                                        type: 'update-amount',
+                                        payload: {
+                                            sym: token1Symbol,
+                                            amount: amt,
+                                        },
+                                    });
+                                }}
+                                handleTokenRatio={handleTokenRatio}
+                                balances={balances}
+                                disabled={
+                                    disabledInput?.includes(token1Symbol) ||
+                                    !isToken1Active
+                                }
+                                twoSide={true}
+                            />
+                        </Box>
                     </Box>
+                    <br />
+                    <div className='pair-text'>CHOOSE A SENTIMENT</div>
                     <Box
                         display='flex'
-                        justifyContent='space-between'
-                        className={classNames('token-input-control', {
-                            active: isToken1Active,
-                            inactive: !isToken1Active,
-                        })}
+                        justifyContent='center'
+                        className='sentiment'
                     >
                         <Box
                             display='flex'
@@ -1756,14 +1833,28 @@ export const AddLiquidityV3 = ({
                                     },
                                 });
                             }}
-                            handleTokenRatio={handleTokenRatio}
-                            balances={balances}
-                            disabled={
-                                disabledInput?.includes(token1Symbol) ||
-                                !isToken1Active
-                            }
-                            twoSide={true}
-                        />
+                        >
+                            <img src={pngApyNormal} />
+                        </div>
+                        <div
+                            className={classNames({
+                                'sentiment-item': true,
+                                active: isFlipped
+                                    ? sentiment === 'bearish'
+                                    : sentiment === 'bullish',
+                            })}
+                            role='button'
+                            onClick={() => {
+                                if (level > 1) {
+                                    setSentiment(
+                                        isFlipped ? 'bearish' : 'bullish',
+                                    );
+                                    trackSentimentInteraction(pool, 'bullish');
+                                }
+                            }}
+                        >
+                            <img src={pngApyHappy} />
+                        </div>
                     </Box>
                 </Box>
                 <br />
@@ -1872,18 +1963,6 @@ export const AddLiquidityV3 = ({
                         </Box>
                     )} */}
                 </div>
-                {/* <br />
-                <div>
-                    <LiquidityActionButton
-                        disabledInput={disabledInput}
-                        tokenInputState={tokenInputState}
-                        pendingApproval={pendingApproval}
-                        onClick={() => doAddLiquidity()}
-                        balances={balances}
-                        pendingBounds={pendingBounds}
-                        currentGasPrice={currentGasPrice}
-                    />
-                </div> */}
             </div>
         </>
     );
