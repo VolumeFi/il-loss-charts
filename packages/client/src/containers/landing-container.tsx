@@ -10,7 +10,7 @@ function LandingContainer({
     gasPrices,
 }: {
     gasPrices: EthGasPrices | null;
-}): JSX.Element {
+}): JSX.Eadd-liquidity-v3.tsxlement {
     const isMobile = useMediaQuery({ query: '(max-width: 800px)' });
 
     return (

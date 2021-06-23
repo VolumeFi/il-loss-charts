@@ -74,6 +74,7 @@ type Props = {
     gasPrices: EthGasPrices | null;
     level: number;
     isNANA: boolean | false;
+    rewardBananas: number;
     leftArrow: boolean | false;
     rightArrow: boolean | false;
     onSkipPairs: () => void;
@@ -93,6 +94,7 @@ export const AddLiquidityV3 = ({
     gasPrices,
     level,
     isNANA,
+    rewardBananas,
     leftArrow,
     rightArrow,
     onSkipPairs,

@@ -22,6 +22,10 @@ const config = {
         v3: {
             networks: {
                 mainnet:
+<<<<<<< HEAD
+=======
+                    // 'http://localhost:8000/subgraphs/name/sommelier/uniswap-v3-history',
+>>>>>>> ad9f2ba (fix ui, graphql server url)
                     'https://api.thegraph.com/subgraphs/name/benesjan/uniswap-v3-subgraph',
                 rinkeby:
                     'http://35.197.14.14:8000/subgraphs/name/sommelier/uniswap-v3-2',
