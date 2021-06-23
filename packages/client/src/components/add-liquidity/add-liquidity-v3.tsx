@@ -218,8 +218,12 @@ export const AddLiquidityV3 = ({
         LiquidityContext,
     );
     let currentGasPrice: number | null = null;
-    if (gasPrices && selectedGasPrice) {
-        currentGasPrice = gasPrices[selectedGasPrice];
+    // if (gasPrices && selectedGasPrice) {
+    //     currentGasPrice = gasPrices[selectedGasPrice];
+    // }
+    // For Level 1 is Standard
+    if (gasPrices) {
+        currentGasPrice = gasPrices.standard;
     }
 
     const [sentiment, setSentiment] = useState<Sentiment>('neutral');
@@ -1537,53 +1541,71 @@ export const AddLiquidityV3 = ({
                                     });
                                 }}
                             >
-                                <div
-                                    style={{
-                                        flexGrow: 1,
-                                        display: 'flex',
-                                        alignItems: 'center',
+                                <Box
+                                    display='flex'
+                                    justifyContent='flex-start'
+                                    flexGrow='1'
+                                    onClick={() => {
+                                        if (
+                                            !isTokenETHActive &&
+                                            selectedSymbolCount === 2
+                                        )
+                                            return;
+                                        if (isTokenETHDisabled) return;
+                                        dispatch({
+                                            type: 'toggle',
+                                            payload: { sym: 'ETH' },
+                                        });
                                     }}
-                                    className={classNames(
-                                        'token-balance-wrapper',
-                                        { active: isTokenETHActive },
-                                    )}
                                 >
-                                    <TokenWithBalance
-                                        id={tokenInputState['ETH']?.id}
-                                        name={'ETH'}
-                                        balance={balances?.['ETH']?.balance}
-                                        decimals={'18'}
-                                        disabled={isTokenETHDisabled}
-                                    />
-                                </div>
+                                    <div
+                                        style={{
+                                            flexGrow: 1,
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                        }}
+                                        className={classNames(
+                                            'token-balance-wrapper',
+                                            { active: isTokenETHActive },
+                                        )}
+                                    >
+                                        <TokenWithBalance
+                                            id={tokenInputState['ETH']?.id}
+                                            name={'ETH'}
+                                            balance={balances?.['ETH']?.balance}
+                                            decimals={'18'}
+                                            disabled={isTokenETHDisabled}
+                                        />
+                                    </div>
+                                </Box>
+                                <TokenInput
+                                    token={'ETH'}
+                                    // we update ETH tokenInputState with whatever WETH amounts to
+                                    // dont show it in the UI if inactive
+                                    amount={
+                                        isTokenETHActive
+                                            ? tokenInputState['ETH'].amount
+                                            : ''
+                                    }
+                                    updateAmount={(amt: string) => {
+                                        dispatch({
+                                            type: 'update-amount',
+                                            payload: {
+                                                sym: 'ETH',
+                                                amount: amt,
+                                            },
+                                        });
+                                    }}
+                                    handleTokenRatio={handleTokenRatio}
+                                    balances={balances}
+                                    disabled={
+                                        disabledInput?.includes('ETH') ||
+                                        !isTokenETHActive
+                                    }
+                                    twoSide={true}
+                                />
                             </Box>
-                            <TokenInput
-                                token={'ETH'}
-                                // we update ETH tokenInputState with whatever WETH amounts to
-                                // dont show it in the UI if inactive
-                                amount={
-                                    isTokenETHActive
-                                        ? tokenInputState['ETH'].amount
-                                        : ''
-                                }
-                                updateAmount={(amt: string) => {
-                                    dispatch({
-                                        type: 'update-amount',
-                                        payload: {
-                                            sym: 'ETH',
-                                            amount: amt,
-                                        },
-                                    });
-                                }}
-                                handleTokenRatio={handleTokenRatio}
-                                balances={balances}
-                                disabled={
-                                    disabledInput?.includes('ETH') ||
-                                    !isTokenETHActive
-                                }
-                                twoSide={true}
-                            />
-                        </Box>
+                        )}
                         <Box
                             display='flex'
                             justifyContent='flex-start'
