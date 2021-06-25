@@ -1953,6 +1953,7 @@ export const AddLiquidityV3 = ({
                             }}
                         >
                             <img src={pngApyNormal} />
+                            <span>NEUTRAL</span>
                         </div>
                         <div
                             className={classNames({
@@ -1972,6 +1973,7 @@ export const AddLiquidityV3 = ({
                             }}
                         >
                             <img src={pngApyHappy} />
+                            <span>BEARISH</span>
                         </div>
                     </Box>
                 </Box>
