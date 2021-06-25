@@ -98,6 +98,10 @@ export const useMarketData = (
             network && network !== '1'
                 ? await getMainnetPoolIdForSymbol(pool.token0, pool.token1)
                 : pool.id;
+<<<<<<< HEAD
+=======
+        // console.log('POOL ID VS', poolId, pool.id);
+>>>>>>> 87092e1 (fix sentiment label, repeat pools)
 
         const response = await fetch(
             `/api/v1/marketData/indicators?poolId=${poolId}`,
