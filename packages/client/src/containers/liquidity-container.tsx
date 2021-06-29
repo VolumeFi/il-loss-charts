@@ -56,11 +56,13 @@ export const LiquidityContainer = ({
     poolId,
     onRefreshPool,
     handleWalletConnect,
+    onAddBasket,
 }: {
     gasPrices: EthGasPrices | null;
     poolId: string;
     onRefreshPool: () => void;
     handleWalletConnect: () => void;
+    onAddBasket: (data: LiquidityBasketData) => void;
 }): JSX.Element => {
     const location = useLocation();
 

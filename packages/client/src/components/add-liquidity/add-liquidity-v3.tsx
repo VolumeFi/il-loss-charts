@@ -80,7 +80,7 @@ type Props = {
     leftArrow: boolean | false;
     rightArrow: boolean | false;
     onSkipPairs: () => void;
-    onAddBasket: () => void;
+    onAddBasket: (data: LiquidityBasketData) => void;
     onLeft: () => void;
     onRight: () => void;
 };
@@ -879,6 +879,10 @@ export const AddLiquidityV3 = ({
             throw new Error('Gas price not selected.');
         }
 
+        console.log(tokenInputState);
+
+        console.log(pool);
+
         let hash: string | undefined;
         let addType: string;
         if (tokenInputState.selectedTokens.length === 1) {
@@ -1578,7 +1582,70 @@ export const AddLiquidityV3 = ({
             return;
         }
 
-        doAddLiquidity();
+        // doAddLiquidity();
+        // doAddBasket();
+
+        if (!pool || !provider || !indicators || !bounds.position) return;
+        if (!currentGasPrice) {
+            throw new Error('Gas price not selected.');
+        }
+
+        console.log(tokenInputState);
+
+        console.log(pool);
+
+        const poolId = pool.id;
+        const poolName = `${pool.token0.symbol}-${pool.token1.symbol}`;
+
+        const token0Address = pool.token0.id;
+        const token0Name = pool.token0.symbol;
+
+        const token1Address = pool.token1.id;
+        const token1Name = pool.token1.symbol;
+
+        const isOneSide =
+            tokenInputState.selectedTokens.length === 1 ? true : false;
+
+        const selectedToken0 = tokenInputState.selectedTokens[0];
+        const lToken0Address = tokenInputState[selectedToken0].id;
+        const lToken0Name = tokenInputState[selectedToken0].symbol;
+        const lToken0Amount = tokenInputState[selectedToken0].amount;
+
+        const selectedToken1 = isOneSide
+            ? null
+            : tokenInputState.selectedTokens[1];
+        const lToken1Address = selectedToken1
+            ? tokenInputState[selectedToken1].id
+            : null;
+        const lToken1Name = selectedToken1
+            ? tokenInputState[selectedToken1].symbol
+            : null;
+        const lToken1Amount = selectedToken1
+            ? tokenInputState[selectedToken1].amount
+            : null;
+
+        const volumeUSD = pool.volumeUSD;
+
+        const poolInfo: LiquidityBasketData = {
+            poolId,
+            poolName,
+            token0Address,
+            token0Name,
+            token1Address,
+            token1Name,
+            isOneSide,
+            lToken0Address,
+            lToken0Name,
+            lToken0Amount,
+            lToken1Address,
+            lToken1Name,
+            lToken1Amount,
+            actionType: 'add',
+            volumeUSD,
+            isNANA,
+        };
+
+        onAddBasket(poolInfo);
     };
 
     return (

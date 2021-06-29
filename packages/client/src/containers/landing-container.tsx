@@ -13,6 +13,29 @@ function LandingContainer({
 }): JSX.Eadd-liquidity-v3.tsxlement {
     const isMobile = useMediaQuery({ query: '(max-width: 800px)' });
 
+    const handleAddBasket = (data: LiquidityBasketData) => {
+        const findIndex = basketData.findIndex(
+            (item) =>
+                item.poolId === data.poolId &&
+                item.actionType === data.actionType,
+        );
+
+        if (findIndex < 0) {
+            basketData.push(data);
+        } else {
+            basketData[findIndex] = {
+                ...data,
+            };
+        }
+
+        setBasketData([...basketData]);
+        setTab('cart');
+    };
+
+    useEffect(() => {
+        console.log(basketData);
+    }, [basketData]);
+
     return (
         <div>
             <AppHeader />
