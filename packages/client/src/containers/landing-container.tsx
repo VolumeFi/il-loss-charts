@@ -32,6 +32,14 @@ function LandingContainer({
         setTab('cart');
     };
 
+    const handleTransactionSuccess = () => {
+        setTab('transactionSuccess');
+    };
+
+    const handleChangePendingStatus = (status: boolean) => {
+        setPendingTransaction(status);
+    };
+
     useEffect(() => {
         console.log(basketData);
     }, [basketData]);
