@@ -41,7 +41,12 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { ThreeDots } from 'react-loading-icons';
 import { compactHash } from 'util/formats';
-import { WalletBalances, BoundsState, TokenInputAmount } from 'types/states';
+import {
+    WalletBalances,
+    BoundsState,
+    TokenInputAmount,
+    LiquidityBasketData,
+} from 'types/states';
 import { useWallet } from 'hooks/use-wallet';
 import { usePendingTx, PendingTx } from 'hooks/use-pending-tx';
 import { useMarketData } from 'hooks';
@@ -1646,6 +1651,27 @@ export const AddLiquidityV3 = ({
         console.log(tokenInputState);
         console.log('************************************');
 
+        const token0Amount = ethers.utils
+            .parseUnits(
+                new BigNumber(
+                    tokenInputState[pool.token0.symbol].amount,
+                ).toFixed(parseInt(pool.token0.decimals)),
+                pool.token0.decimals,
+            )
+            .toString();
+
+        const token1Amount = ethers.utils
+            .parseUnits(
+                new BigNumber(
+                    tokenInputState[pool.token1.symbol].amount,
+                ).toFixed(parseInt(pool.token1.decimals)),
+                pool.token1.decimals,
+            )
+            .toString();
+        const ethAmount = tokenInputState['ETH']
+            ? tokenInputState['ETH'].amount.toString()
+            : '0';
+
         const poolInfo: LiquidityBasketData = {
             poolId,
             poolName,
@@ -1665,6 +1691,12 @@ export const AddLiquidityV3 = ({
             actionType: 'add',
             volumeUSD,
             isNANA,
+            token0Amount,
+            token1Amount,
+            ethAmount,
+            bounds,
+            feeTier: pool.feeTier,
+            balances,
             func: doAddLiquidity,
         };
 
