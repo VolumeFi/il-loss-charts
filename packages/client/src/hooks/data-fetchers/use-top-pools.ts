@@ -30,6 +30,7 @@ export const useTopPools = (): UseTopPools => {
         wallet: { network = '1' },
     } = useWallet();
 
+
     let networkName = 'mainnet';
     if (network) {
         networkName = config.networks[network]?.name || 'mainnet';

@@ -1,10 +1,12 @@
 import { EthGasPrices } from '@sommelier/shared-types';
+
 import { TelegramCTA } from 'components/social-cta';
 import { LiquidityContainer } from 'containers/liquidity-container';
 import { useMediaQuery } from 'react-responsive';
 import { AppHeader } from 'components/app-header/app-header';
 import { Box } from '@material-ui/core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 import { faDiscord } from '@fortawesome/free-brands-svg-icons';
 function LandingContainer({
     gasPrices,
@@ -12,6 +14,43 @@ function LandingContainer({
     gasPrices: EthGasPrices | null;
 }): JSX.Eadd-liquidity-v3.tsxlement {
     const isMobile = useMediaQuery({ query: '(max-width: 800px)' });
+
+
+    const handleAddBasket = (
+        data: LiquidityBasketData,
+        navigateToBasket: boolean,
+    ) => {
+        const findIndex = basketData.findIndex(
+            (item) =>
+                item.poolId === data.poolId &&
+                item.actionType === data.actionType,
+        );
+
+        if (findIndex < 0) {
+            basketData.push(data);
+        } else {
+            basketData[findIndex] = {
+                ...data,
+            };
+        }
+
+        setBasketData([...basketData]);
+        if (navigateToBasket) {
+            setTab('cart');
+        }
+    };
+
+    const handleTransactionSuccess = () => {
+        setTab('transactionSuccess');
+    };
+
+    const handleChangePendingStatus = (status: boolean) => {
+        setPendingTransaction(status);
+    };
+
+    useEffect(() => {
+        console.log(basketData);
+    }, [basketData]);
 
     const handleAddBasket = (
         data: LiquidityBasketData,
@@ -90,6 +129,7 @@ function LandingContainer({
                     rel='noreferrer'
                 >
                     <img src='../styles/images/cart.png' />
+
                 </div>
             </Box>
         </div>

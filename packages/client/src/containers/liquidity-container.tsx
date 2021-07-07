@@ -21,9 +21,11 @@ import { useWallet } from 'hooks/use-wallet';
 import { debug } from 'util/debug';
 import { PoolOverview } from 'hooks/data-fetchers';
 import { EthGasPrices } from '@sommelier/shared-types';
+import { LiquidityBasketData } from 'types/states';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle, faCog } from '@fortawesome/free-solid-svg-icons';
 import './liquidity-container.scss';
+
 import { Circles } from 'react-loading-icons';
 import { ethers } from 'ethers';
 import { SettingsPopover } from 'components/add-liquidity/settings-popover';
@@ -68,6 +70,7 @@ export const LiquidityContainer = ({
     onAddSuccess: () => void;
     onStatus: (status: boolean) => void;
 }): JSX.Element => {
+
     const location = useLocation();
 
     // const { poolId }: { poolId: string } = useParams();

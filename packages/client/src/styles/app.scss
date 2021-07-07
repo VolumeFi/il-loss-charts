@@ -14,6 +14,15 @@ $Bungee: 'Bungee';
 //     src: url("./Bungee-Regular.ttf");
 // }
 
+@import url('https://fonts.googleapis.com/css?family=Bungee|Bungee+Hairline|Bungee+Inline|Bungee+Outline|Bungee+Shade');
+
+$Bungee: 'Bungee';
+
+// @font-face {
+//     font-family: 'Bungee';
+//     src: url("./Bungee-Regular.ttf");
+// }
+
 html {
     font-size: 13px;
 }
@@ -217,12 +226,17 @@ p {
     background: var(--bgDeep);
     color: var(--facePrimary);
 
-    background: rgb(32, 9, 88);
-    background: linear-gradient(
-        170deg,
-        var(--bgDeep) 0%,
-        var(--bgPrimary) 100%
-    );
+
+    background: #7233e8;
+    // background: rgb(32, 9, 88);
+    // background: linear-gradient(
+    //     222deg,
+    //     #030107 0%,
+    //     #8708dcc7 60%,
+    //     #430263 80%,
+    //     rgba(0, 213, 255, 0.632) 100%
+    // );
+
     // background-color: #05001f;
     // background: linear-gradient(160deg, #05001f 0%, #18086b 100%);
 }
@@ -889,6 +903,9 @@ p {
     text-transform: uppercase;
     display: flex;
     align-items: center;
+
+    justify-content: center;
+
 
     img {
         height: 25px;

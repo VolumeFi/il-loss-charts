@@ -24,16 +24,15 @@ import { hourMs, secondMs } from 'util/date';
 import catchAsyncRoute from 'api/util/catch-async-route';
 import config from '@config';
 import validateEthAddress from 'api/util/validate-eth-address';
-<<<<<<< HEAD
+
 import {
     poolIdParamsSchema,
     poolIdValidator,
     networkSchema,
     networkValidator,
 } from 'api/util/validators';
-=======
+
 import { getRandomArbitrary } from 'util/math';
->>>>>>> 8c034d4 (fix skip, random pool)
 
 // poolToPair(pool: Pool): IUniswapPair {
 // const totalSupply = '0'; // TODO

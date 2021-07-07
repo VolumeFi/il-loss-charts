@@ -55,6 +55,7 @@ import { LiquidityRange } from 'components/add-liquidity/liquidity-range';
 import { EthGasPrices, LiquidityBand } from '@sommelier/shared-types';
 import { PoolOverview } from 'hooks/data-fetchers';
 import { debug } from 'util/debug';
+
 import Sentry, { init, SentryError } from 'util/sentry';
 import { trackSentimentInteraction, trackAddLiquidityTx } from 'util/mixpanel';
 import classNames from 'classnames';
@@ -1703,9 +1704,196 @@ export const AddLiquidityV3 = ({
         onAddBasket(poolInfo);
     };
 
+    const isDisabled = (symbol: string) =>
+        disabledInput && disabledInput.includes(symbol);
+
+    const handleAddBasket = () => {
+        // setAlertTitle('INSUFFICIENT FUNDS!');
+        // setAlertDescription('PLEASE SELECT ANOTHER AMOUNT OR ANOTHER TOKEN');
+        // setShowAlert(true);
+
+        if (!wallet?.account) {
+            setAlertTitle('CONNECT WALLET');
+            setAlertDescription('APE MUST CONNECT WALLET');
+            setShowAlert(true);
+            return;
+        }
+
+        if (
+            wallet?.providerName === 'walletconnect' &&
+            !wallet?.provider?.connected
+        ) {
+            setAlertTitle('RECONNECT WALLET!');
+            setAlertDescription('APE MUST RECONNECT WALLET');
+            setShowAlert(true);
+            return;
+        }
+
+        if (pendingApproval) {
+            setAlertTitle('APPROVING NOW');
+            setAlertDescription('APE APPROVE THE TRANSACTION');
+            setShowAlert(true);
+            return;
+        }
+
+        if (tokenInputState?.selectedTokens.length === 0) {
+            setAlertTitle('SELECT TOKEN');
+            setAlertDescription('APE MUST SELECT A TOKEN FIRST!');
+            setShowAlert(true);
+            return;
+        }
+
+        const numOfTokens = tokenInputState?.selectedTokens?.length ?? 0;
+
+        for (let i = 0; i < numOfTokens; i++) {
+            const symbol = tokenInputState?.selectedTokens[i];
+            if (!tokenInputState[symbol].amount && !isDisabled(symbol)) {
+                setAlertTitle('INPUT AMOUNT');
+                setAlertDescription('APE MUST TYPE AMOUNT OF TOKEN');
+                setShowAlert(true);
+                return;
+            }
+            const tokenAmount = new BigNumber(tokenInputState[symbol].amount);
+
+            if ((!tokenAmount || tokenAmount.lte(0)) && !isDisabled(symbol)) {
+                setAlertTitle('INPUT AMOUNT');
+                setAlertDescription('APE MUST TYPE AMOUNT OF TOKEN');
+                setShowAlert(true);
+                return;
+            }
+        }
+
+        for (let i = 0; i < numOfTokens; i++) {
+            const symbol = tokenInputState?.selectedTokens[i];
+            const tokenAmount = new BigNumber(tokenInputState[symbol].amount);
+            const tokenBalance =
+                ethers.utils.formatUnits(
+                    balances?.[symbol]?.balance || 0,
+                    parseInt(balances?.[symbol]?.decimals || '0', 10),
+                ) || '0';
+
+            if (tokenAmount.gt(tokenBalance)) {
+                setAlertTitle('INSUFFICIENT AMOUNT');
+                setAlertDescription('APE NOT HAVE ENOUGH TOKEN!');
+                setShowAlert(true);
+                return;
+            }
+        }
+
+        if (pendingBounds) {
+            setAlertTitle('PENDING NOW');
+            setAlertDescription('APE WAIT WHILE BLOCKCHAIN WORK');
+            setShowAlert(true);
+            return;
+        }
+
+        // doAddLiquidity();
+        // doAddBasket();
+
+        if (!pool || !provider || !indicators || !bounds.position) return;
+        if (!currentGasPrice) {
+            throw new Error('Gas price not selected.');
+        }
+
+        console.log(tokenInputState);
+
+        console.log(pool);
+
+        const poolId = pool.id;
+        const poolName = `${pool.token0.symbol}-${pool.token1.symbol}`;
+
+        const token0Address = pool.token0.id;
+        const token0Name = pool.token0.symbol;
+        const token0Decimal = pool.token0.decimals;
+
+        const token1Address = pool.token1.id;
+        const token1Name = pool.token1.symbol;
+        const token1Decimal = pool.token1.decimals;
+
+        const isOneSide =
+            tokenInputState.selectedTokens.length === 1 ? true : false;
+
+        const selectedToken0 = tokenInputState.selectedTokens[0];
+        const lToken0Address = tokenInputState[selectedToken0].id;
+        const lToken0Name = tokenInputState[selectedToken0].symbol;
+        const lToken0Amount = tokenInputState[selectedToken0].amount;
+
+        const selectedToken1 = isOneSide
+            ? null
+            : tokenInputState.selectedTokens[1];
+        const lToken1Address = selectedToken1
+            ? tokenInputState[selectedToken1].id
+            : null;
+        const lToken1Name = selectedToken1
+            ? tokenInputState[selectedToken1].symbol
+            : null;
+        const lToken1Amount = selectedToken1
+            ? tokenInputState[selectedToken1].amount
+            : null;
+
+        const volumeUSD = pool.volumeUSD;
+
+        console.log('************************************');
+        console.log(pool);
+        console.log(tokenInputState);
+        console.log('************************************');
+
+        const token0Amount = ethers.utils
+            .parseUnits(
+                new BigNumber(
+                    tokenInputState[pool.token0.symbol].amount,
+                ).toFixed(parseInt(pool.token0.decimals)),
+                pool.token0.decimals,
+            )
+            .toString();
+
+        const token1Amount = ethers.utils
+            .parseUnits(
+                new BigNumber(
+                    tokenInputState[pool.token1.symbol].amount,
+                ).toFixed(parseInt(pool.token1.decimals)),
+                pool.token1.decimals,
+            )
+            .toString();
+        const ethAmount = tokenInputState['ETH']
+            ? tokenInputState['ETH'].amount.toString()
+            : '0';
+
+        const poolInfo: LiquidityBasketData = {
+            poolId,
+            poolName,
+            token0Address,
+            token0Name,
+            token0Decimal,
+            token1Address,
+            token1Name,
+            token1Decimal,
+            isOneSide,
+            lToken0Address,
+            lToken0Name,
+            lToken0Amount,
+            lToken1Address,
+            lToken1Name,
+            lToken1Amount,
+            actionType: 'add',
+            volumeUSD,
+            isNANA,
+            token0Amount,
+            token1Amount,
+            ethAmount,
+            bounds,
+            feeTier: pool.feeTier,
+            balances,
+            func: doAddLiquidity,
+        };
+
+        onAddBasket(poolInfo);
+    };
+
     return (
         <>
             <div className='add-v3-container'>
+
                 <Box
                     display='flex'
                     flexDirection='row'
@@ -1737,8 +1925,8 @@ export const AddLiquidityV3 = ({
                             display='flex'
                             justifyContent='space-between'
                             className={classNames('token-input-control', {
-                                active: isTokenETHActive,
-                                inactive: !isTokenETHActive,
+                                active: isToken0Active,
+                                inactive: !isToken0Active,
                             })}
                         >
                             <Box
@@ -1748,17 +1936,22 @@ export const AddLiquidityV3 = ({
                                 className='token-select'
                                 onClick={() => {
                                     if (
-                                        !isTokenETHActive &&
+                                        !isToken0Active &&
                                         selectedSymbolCount === 2
                                     )
                                         return;
-                                    if (isTokenETHDisabled) return;
+                                    if (
+                                        isToken0Disabled ||
+                                        (token0Symbol === 'WETH' && disableWETH)
+                                    )
+                                        return;
                                     dispatch({
                                         type: 'toggle',
-                                        payload: { sym: 'ETH' },
+                                        payload: { sym: token0Symbol },
                                     });
                                 }}
                             >
+
                                 <Box
                                     display='flex'
                                     justifyContent='flex-start'
@@ -1998,6 +2191,7 @@ export const AddLiquidityV3 = ({
                         justifyContent='center'
                         className='sentiment'
                     >
+
                         <Box
                             display='flex'
                             justifyContent='flex-start'
@@ -2078,6 +2272,7 @@ export const AddLiquidityV3 = ({
                         >
                             <img src={pngApyNormal} />
                             <span>NEUTRAL</span>
+
                         </div>
                         <div
                             className={classNames({

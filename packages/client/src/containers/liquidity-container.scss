@@ -17,6 +17,7 @@
     width: 450px;
     min-width: 225px;
     // background: radial-gradient(var(--bgDefault), var(--bgPrimary));
+
     background: linear-gradient(135deg, var(--bgPrimary), var(--bgDefault));
     box-shadow: 0 3px 12px var(--bgDeep);
 
@@ -33,6 +34,7 @@
 .transaction-speed {
     display: flex;
     font-size: 1rem;
+
     background: var(--bgDefault);
     padding: 0.75rem;
     border-radius: 4px;
