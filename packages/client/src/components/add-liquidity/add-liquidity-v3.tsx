@@ -1990,7 +1990,9 @@ export const AddLiquidityV3 = ({
                         </Box>
                     </Box>
                     <br />
-                    <div className='pair-text'>CHOOSE A SENTIMENT</div>
+                    <div className={classNames('pair-text', { nana: isNANA })}>
+                        CHOOSE A SENTIMENT
+                    </div>
                     <Box
                         display='flex'
                         justifyContent='center'
