@@ -13,7 +13,10 @@ function LandingContainer({
 }): JSX.Eadd-liquidity-v3.tsxlement {
     const isMobile = useMediaQuery({ query: '(max-width: 800px)' });
 
-    const handleAddBasket = (data: LiquidityBasketData) => {
+    const handleAddBasket = (
+        data: LiquidityBasketData,
+        navigateToBasket: boolean,
+    ) => {
         const findIndex = basketData.findIndex(
             (item) =>
                 item.poolId === data.poolId &&
@@ -29,7 +32,9 @@ function LandingContainer({
         }
 
         setBasketData([...basketData]);
-        setTab('cart');
+        if (navigateToBasket) {
+            setTab('cart');
+        }
     };
 
     const handleTransactionSuccess = () => {
