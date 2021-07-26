@@ -35,6 +35,9 @@ import { SKIP_DURATION, storage } from 'util/localStorage';
 
 import { V3PositionData } from '@sommelier/shared-types/src/api';
 
+import gameData from 'constants/gameData.json';
+import { Level, LevelTask } from 'types/game';
+
 function LandingContainer({
     setShowConnectWallet,
     gasPrices,
@@ -44,14 +47,18 @@ function LandingContainer({
 }): JSX.Element {
     const { wallet } = useWallet();
     const currentLevel = storage.getLevel();
+    const currentBasketData = storage.getBasketData();
+
+    const gameLevels: Level[] = gameData.game;
+    const currentLevelData: Level = gameLevels[Number(currentLevel) - 1];
 
     const [tab, setTab] = useState<Tabs>('home');
 
-    const [basketData, setBasketData] = useState<LiquidityBasketData[]>([]);
+    const [basketData, setBasketData] = useState<LiquidityBasketData[]>(
+        currentBasketData,
+    );
 
     const [pendingTransaction, setPendingTransaction] = useState(false);
-    const [transactionEstimatedTime, setTransactionEstimatedTime] = useState('');
-    const [transactionEstimatedTimeUnit, setTransactionEstimatedTimeUnit] = useState('');
 
     const [levelCompleteStatus, setLevelCompleteStatus] = useState<string>(
         storage.getTask(),
@@ -69,6 +76,15 @@ function LandingContainer({
         storage.getLastSkipTime(),
     );
     const [shouldRefreshPool, setShouldRefreshPool] = useState<boolean>(false);
+
+    const [poolIndex, setPoolIndex] = useState<number>(0);
+    const [poolCount, setPoolCount] = useState<number>(
+        Number(currentLevelData.poolCount),
+    );
+
+    const handleChangePoolIndex = (index: number) => {
+        setPoolIndex(index % poolCount);
+    };
 
     useEffect(() => {
         let refresh = false;
@@ -153,6 +169,8 @@ function LandingContainer({
             };
         }
 
+        storage.setBasketData([...basketData]);
+
         setBasketData([...basketData]);
         if (navigateToBasket) {
             setTab('cart');
@@ -166,30 +184,8 @@ function LandingContainer({
         setBasketData([]);
     };
 
-    const handleChangePendingStatus = (status: boolean, time?: number) => {
+    const handleChangePendingStatus = (status: boolean) => {
         setPendingTransaction(status);
-
-        let value = '', unit = '';
-        if (time) {
-            if (time > 0 && time < 60) {
-                value = Math.floor(time).toString();
-                unit = 'SECS';
-            }
-            else if (time < 3600) {
-                value = Math.floor(time / 60).toString();
-                unit = 'MINS';
-            }
-            else if (time < 24 * 3600) {
-                value = Math.floor(time / 3600).toString();
-                unit = 'HOURS';
-            }
-            else {
-                value = '';
-                unit = '';
-            }
-        }
-        setTransactionEstimatedTime(value);
-        setTransactionEstimatedTimeUnit(unit);
     };
 
     const handleChangeTab = (t: Tabs) => {
@@ -209,12 +205,21 @@ function LandingContainer({
 
         if (currentLevel === '1' && basketData.length > 0) {
             if (t === 'home') {
-                setTab('cart');
+                setPoolIndex(poolCount - 1);
+                setTab(t);
                 return;
             }
         }
+
+        setPoolIndex(0);
         setTab(t);
     };
+
+    const handleEditCart = (poolIndex: number) => {
+        setPoolIndex(poolIndex % poolCount);
+        setTab('home');
+    };
+
     // useEffect(() => {
     //     console.log(basketData);
     // }, [basketData]);
@@ -231,12 +236,12 @@ function LandingContainer({
 
             {pendingTransaction && (
                 <div className='pending-transaction-board'>
-                    <img src={gifLoading} className='pending-transaction-image' />
+                    <img src={pngWait} className='pending-transaction-image' />
                     <p className='pending-transaction-text'>
                         YOUR TRANSACTION IS BEING CONFIRMED
                         <br />
-                        ESTIMATED DURATION: 
-                        <span style={{ color: '#FFDF00' }}> {transactionEstimatedTime} {transactionEstimatedTimeUnit}</span>
+                        ESTIMATED DURATION:{' '}
+                        <span style={{ color: '#FFDF00' }}>2 MINS</span>
                     </p>
                 </div>
             )}
@@ -252,6 +257,8 @@ function LandingContainer({
                         gasPrices={gasPrices}
                         poolId={currentPoolId}
                         basket={basketData}
+                        poolIndex={poolIndex}
+                        poolCount={poolCount}
                         onRefreshPool={() => handleRefreshPool()}
                         handleWalletConnect={() => showWalletModal()}
                         onAddBasket={(
@@ -259,10 +266,13 @@ function LandingContainer({
                             navigateToBasket: boolean,
                         ) => handleAddBasket(data, navigateToBasket)}
                         onAddSuccess={() => handleTransactionSuccess()}
-                        onStatus={(status: boolean, time?: number) =>
-                            handleChangePendingStatus(status, time)
+                        onStatus={(status: boolean) =>
+                            handleChangePendingStatus(status)
                         }
                         handleChangeTab={(t: Tabs) => handleChangeTab(t)}
+                        handleChangePoolIndex={(i: number) =>
+                            handleChangePoolIndex(i)
+                        }
                     />
                 )}
                 {tab === 'task' && (
@@ -299,9 +309,10 @@ function LandingContainer({
                             handleChangeTab('home');
                         }}
                         onAddSuccess={() => handleTransactionSuccess()}
-                        onStatus={(status: boolean, time?: number) =>
-                            handleChangePendingStatus(status, time)
+                        onStatus={(status: boolean) =>
+                            handleChangePendingStatus(status)
                         }
+                        onEdit={(i: number) => handleEditCart(i)}
                     />
                 )}
                 {tab === 'positionManager' && (

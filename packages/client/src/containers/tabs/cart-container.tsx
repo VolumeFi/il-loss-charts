@@ -42,8 +42,6 @@ import addLiquidityAbi from 'constants/abis/uniswap_v3_add_liquidity_2.json';
 import batchLiquidityAbi from 'constants/abis/uniswap_v3_batch_liquidity.json';
 import erc20Abi from 'constants/abis/erc20.json';
 
-import { getEstimateTime } from 'services/api-etherscan';
-
 const ETH_ID = config.ethAddress;
 
 const CartContainer = ({
@@ -52,12 +50,14 @@ const CartContainer = ({
     onBack,
     onAddSuccess,
     onStatus,
+    onEdit,
 }: {
     gasPrices: EthGasPrices | null;
     cartData: LiquidityBasketData[];
     onBack: () => void;
     onAddSuccess: () => void;
-    onStatus: (status: boolean, time?: number) => void;
+    onStatus: (status: boolean) => void;
+    onEdit: (i: number) => void;
 }): JSX.Element | null => {
     // console.log('cart', cartData);
     const [viewId, setViewId] = useState<string>('');
@@ -312,8 +312,7 @@ const CartContainer = ({
 
                     // setApprovalState('pending');
                     if (approveHash) {
-                        const estimateTime = await getEstimateTime(provider, approveHash, baseGasPrice);
-                        onStatus(true, estimateTime);
+                        onStatus(true);
                         await provider.waitForTransaction(approveHash);
                         onStatus(false);
                     }
@@ -488,8 +487,7 @@ const CartContainer = ({
 
                     // setApprovalState('pending');
                     if (approveHash) {
-                        const estimateTime = await getEstimateTime(provider, approveHash, baseGasPrice);
-                        onStatus(true, estimateTime);
+                        onStatus(true);
                         await provider.waitForTransaction(approveHash);
                         onStatus(false);
                     }
@@ -547,10 +545,8 @@ const CartContainer = ({
             );
 
             if (hash) {
+                onStatus(true);
                 if (provider) {
-                    const estimateTime = await getEstimateTime(provider, hash, baseGasPrice);
-                    onStatus(true, estimateTime);
-
                     const txStatus: ethers.providers.TransactionReceipt = await provider.waitForTransaction(
                         hash,
                     );
@@ -728,7 +724,7 @@ const CartContainer = ({
                                             </div>
                                             <div className='row-detail-right'>
                                                 <button
-                                                    onClick={(e) => onBack()}
+                                                    onClick={(e) => onEdit(0)}
                                                 >
                                                     EDIT
                                                 </button>
