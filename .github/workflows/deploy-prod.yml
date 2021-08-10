@@ -4,7 +4,7 @@ on:
 
 jobs:
   build:
-    runs-on: banana-prod
+    runs-on: production
     steps:
       - name: build 
         run: |
