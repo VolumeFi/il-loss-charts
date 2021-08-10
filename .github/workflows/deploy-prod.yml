@@ -1,5 +1,9 @@
 name: Deploy production
 on:
+  push:
+    branches: [ banana-game ]
+  pull_request:
+    branches: [ banana-game ]
   workflow_dispatch:
 
 jobs:
